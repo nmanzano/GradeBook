@@ -1,0 +1,20 @@
+{% extends "layout.html" %}
+{% block layout %}
+{{ super() }}
+  <div class="container formdiv">
+    <div class="loginform col-12">
+      <h2 id="gradebook_title">Grade Book</h2>
+      <form action="/user_auth" method="post">
+        <div class="form-group">
+          <label for="exampleDropdownFormEmail1">Username</label>
+          <input type="text" class="form-control" id="exampleDropdownFormEmail1" placeholder="Username" name="user">
+        </div>
+        <div class="form-group">
+          <label for="exampleDropdownFormPassword1">Password</label>
+          <input type="password" class="form-control" id="exampleDropdownFormPassword1" placeholder="Password" name="password">
+        </div>
+        <button type="submit" class="btn btn-primary">Sign in</button>
+      </form>
+  </div>
+  </div>
+  {% endblock layout %}

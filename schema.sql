@@ -13,6 +13,13 @@ CREATE TABLE student (
 CREATE TABLE quiz (
   quiz_id INTEGER PRIMARY KEY AUTOINCREMENT,
   subject TEXT UNIQUE NOT NULL,
-  questions INTEGER NOT NULL,
+  num_of_questions INTEGER NOT NULL,
   quiz_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE student_quiz_results (
+  student_id INTEGER,
+  quiz_id INTEGER,
+  FOREIGN KEY (student_id) REFERENCES student(student_id),
+  FOREIGN KEY (quiz_id) REFERENCES quiz(quiz_id)
 );
