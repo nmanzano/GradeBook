@@ -1,16 +1,8 @@
 {% extends "layout.html" %}
 {% block layout %}
 {{ super() }}
-  <nav class="navbar navbar-default">
-    <div class="container-fluid">
-      <div class="navbar-header">
-        <a class="navbar-brand" href="#">Gradebook Dashboard</a>
-      </div>
-      <ul class="nav navbar-nav">
-        <li><a href="#">Students</a></li>
-        <li><a href="#">Quizzes</a></li>
-      </ul>
-    </div>
-  </nav>
-  <button type="button" class="btn btn-primary">Add Student</button>
+{% include "navbar_layout.html" %}
+{% block nav %}
+{% endblock nav %}
+  <button type="button" class="btn btn-primary" onclick="window.location.href='{{ url_for( 'student' ) }}'"">Add Student</button>
 {% endblock layout%}

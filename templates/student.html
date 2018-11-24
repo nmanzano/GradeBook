@@ -1,0 +1,33 @@
+{% extends "layout.html" %}
+{% block layout %}
+{{ super() }}
+{% include "navbar_layout.html" %}
+{% block nav %}
+{% endblock nav %}
+
+{% if content['success'] %}
+<div class="alert alert-success" role="alert">
+  <h3>Student {{content['student']}} has been added to your Gradebook</h3>
+</div>
+{% endif %}
+{% if content['error'] %}
+<div class="alert alert-danger" role="alert">
+  <h3>Error: Please Include Student's First and Last name</h3>
+</div>
+{% endif %}
+<div class="container">
+  <h2>Add Student</h2>
+  <form action="" method="post">
+      <div class="form-group row">
+        <div class="col-md-6">
+          <input type="text" class="form-control" placeholder="First Name" name="first_name">
+        </div>
+        <div class="col-md-6">
+          <input type="text" class="form-control" placeholder="Last Name" name="last_name">
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary btn-lg btn-block">Save Student</button>
+  </form>
+</div>
+
+{% endblock layout%}

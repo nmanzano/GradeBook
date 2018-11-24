@@ -2,6 +2,9 @@ body {
   /* background-color: red; */
 }
 
+h3 {
+  text-align: center;
+}
 .formdiv{
   border: 1px solid;
   margin-top: 10%;

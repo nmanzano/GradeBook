@@ -6,7 +6,7 @@ CREATE TABLE admin (
 
 CREATE TABLE student (
   student_id INTEGER PRIMARY KEY AUTOINCREMENT,
-  first_name TEXT UNIQUE NOT NULL,
+  first_name TEXT NOT NULL,
   last_name TEXT NOT NULL
 );
 
