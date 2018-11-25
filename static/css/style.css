@@ -1,21 +1,22 @@
-body {
-  /* background-color: red; */
-}
-
-h3 {
+h3{
   text-align: center;
 }
-.formdiv{
+
+hr{
+  margin-top: 10px;
+}
+
+.formdiv {
   border: 1px solid;
   margin-top: 10%;
   width: 400px;
 }
 
-.loginform{
+.loginform {
   margin: 10px auto 20px auto;
   width: 70%;
 }
 
-#gradebook_title{
+#gradebook_title {
   text-align: center;
 }

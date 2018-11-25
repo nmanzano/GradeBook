@@ -35,7 +35,6 @@ def get_db():
 def selective_query_db(query, args=(), one=False):
     db = get_db().execute(query, args)
     rv = db.fetchall()
-    db.close()
     return (rv[0] if rv else None) if one else rv
 
 
@@ -43,6 +42,29 @@ def all_query_db(query):
     db = get_db().execute(query)
     response = db.fetchall()
     return response
+
+
+def student_and_grades(student_id):
+    data_list = []
+    student_data = all_query_db("""SELECT * from student_quiz_results
+                                where student_id == {}""".format(student_id))
+    if student_data:
+        for data in student_data:
+            quiz_data = (selective_query_db(
+                       'select * from quiz where quiz_id = ?',
+                       [data[1]], one=True))
+            grade = data[2]
+            quiz_name = quiz_data[1]
+            number_of_questions = quiz_data[2]
+            date_of_quiz = quiz_data[3]
+
+            data_list.append({
+                'quiz_name': quiz_name,
+                'grade': grade,
+                'number_of_questions': number_of_questions,
+                'date_of_quiz': date_of_quiz
+                })
+    return data_list
 
 
 def post_db(query, args=(), one=False):
@@ -72,19 +94,36 @@ def dashboard():
 
 @app.route('/student_profile', methods=['GET', 'POST'])
 def student_profile():
-    content = {}
-    print(request.args["student_id"], 'line 76')
-    print(request.args["student_first"], 'line 77')
-    print(request.args["student_last"], 'line 78')
-    # print(request.args["student_first"], 'line 76')
-    content['student_id'] = request.args['student_id']
-    content['student_first'] = request.args['student_first'].upper()
-    content['student_last'] = request.args['student_last'].upper()
-    # liststudent = student.split()
-    # print(liststudent[0], 'line 79')
-    # print(liststudent[1], 'line 79')
-    # print(liststudent[2], 'line 79')
-    return render_template('student_profile.html', student=content)
+    student_data = {}
+    if request.method == "POST":
+        try:
+            student_id = int(request.args['student_id'])
+            quiz_id = int(request.form['quiz'])
+            grade = int(request.form['grade'])
+
+            if quiz_id and grade:
+                print('this is 106')
+                student_quiz_results = (post_db(
+                        """INSERT INTO student_quiz_results
+                        (student_id, quiz_id, grade) VALUES(?, ?, ?)""",
+                        [student_id, quiz_id, grade], one=True))
+                student_data['success'] = True
+        except:
+            print('this is 113')
+            student_data['error'] = True
+            pass
+
+    student_data['student_id'] = request.args['student_id']
+    student_data['student_first'] = request.args['student_first']
+    student_data['student_last'] = request.args['student_last']
+    all_quizzes = (all_query_db('SELECT * from quiz'))
+    all_student_results = student_and_grades(student_data['student_id'])
+
+    return render_template('student_profile.html',
+                           student=student_data,
+                           student_test_results=all_student_results,
+                           quiz_data=all_quizzes
+                           )
 
 
 @app.route('/student', methods=['GET', 'POST'])
@@ -106,20 +145,27 @@ def student():
 
 @app.route('/quiz', methods=['GET', 'POST'])
 def quiz():
+    msg = {}
     if request.method == "POST":
-        quiz_input = request.form['subject']
+        quiz_input = request.form['subject'].upper()
         number_input = request.form['num_of_questions']
         date_input = request.form['quiz_date']
-        print(quiz_input, number_input, date_input)
+
         if quiz_input and number_input and date_input:
-            student_name = (post_db(
-                    """INSERT INTO quiz(
-                    subject, num_of_questions, quiz_date
-                    ) VALUES(?, ?, ?)""",
-                    [quiz_input, number_input, date_input], one=True))
+            try:
+                student_name = (post_db(
+                        """INSERT INTO quiz(
+                        subject, num_of_questions, quiz_date
+                        ) VALUES(?, ?, ?)""",
+                        [quiz_input, number_input, date_input], one=True))
+                msg['success'] = True
+            except:
+                msg['error'] = True
+                pass
+        else:
+            msg['error'] = True
     all_quizzes = (all_query_db('SELECT * from quiz'))
-    print(all_quizzes, 'this is line 115')
-    return render_template('quiz.html', all_quizzes=all_quizzes)
+    return render_template('quiz.html', all_quizzes=all_quizzes, msg=msg)
 
 
 @app.route('/user_auth', methods=['POST'])

@@ -4,7 +4,65 @@
 {% include "navbar_layout.html" %}
 {% block nav %}
 {% endblock nav %}
+
+{% if student['success'] %}
+  <div class="alert alert-success" role="alert">
+    <h3>Grade Submitted for {{student['student_first']}} {{student['student_last']}}</h3>
+  </div>
+{% endif %}
+
+{% if student['error'] %}
+  <div class="alert alert-danger" role="alert">
+    <h3>Error: Please select a Test and enter in a Grade</h3>
+  </div>
+{% endif %}
+
 <div class="container">
-  <h2>Student: {{student['student_first']}} {{student['student_last']}}</h2>
+  {% for item in student_test_results %}
+    {{item[1]}}
+  {% endfor %}
+  <form action="" method="post">
+    <h2>{{student['student_first']}} {{student['student_last']}}</h2>
+    <hr>
+      <div class="form-group row">
+        <div class="col-md-6 form-group">
+          <select class="form-control" name="quiz">
+            <option>Select Quiz</option>
+            {% for quiz in quiz_data %}
+              <option value="{{quiz[0]}}">{{quiz[1]}}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="col-md-6">
+          <input type="number" class="form-control" placeholder="Quiz Grade" name="grade">
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary btn-lg btn-block">Save Grade</button>
+  </form>
+  <br>
+  <hr>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Quiz Subject</th>
+        <th>Number of Questions</th>
+        <th>Date Administered</th>
+        <th>Number of Questions</th>
+        <th>Grade</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in student_test_results %}
+      <tr>
+        <td>{{item['quiz_name']}}</td>
+        <td>{{item['number_of_questions']}}</td>
+        <td>{{item['date_of_quiz']|datetimeformat}}</td>
+        <td>{{item['number_of_questions']}}</td>
+        <td>{{item['grade']}}%</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
 </div>
+
 {% endblock layout%}

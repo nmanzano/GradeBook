@@ -4,8 +4,24 @@
 {% include "navbar_layout.html" %}
 {% block nav %}
 {% endblock nav %}
+
+{% if msg['success'] %}
+  <div class="alert alert-success" role="alert">
+    <h3>Quiz Has Been Add</h3>
+  </div>
+{% endif %}
+
+{% if msg['error'] %}
+  <div class="alert alert-danger" role="alert">
+    <h3>Error: Fill In All Fields and with Nonexistent Information</h3>
+  </div>
+{% endif %}
+
+
+
 <div class="container">
   <h2>Add Quiz</h2>
+  <hr>
   <form action="" method="post">
       <div class="form-group row">
         <div class="col-md-4">
@@ -21,6 +37,7 @@
       <button type="submit" class="btn btn-primary btn-lg btn-block">Save Quiz</button>
   </form>
   <br>
+  <hr>
   <table class="table table-striped">
     <thead>
       <tr>
