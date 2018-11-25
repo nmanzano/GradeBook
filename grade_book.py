@@ -1,6 +1,6 @@
 import sqlite3
 import os.path
-
+from datetime import datetime
 from flask import Flask, render_template, g, redirect, request
 
 app = Flask(__name__)
@@ -32,7 +32,7 @@ def get_db():
     return db
 
 
-def select_query_db(query, args=(), one=False):
+def selective_query_db(query, args=(), one=False):
     db = get_db().execute(query, args)
     rv = db.fetchall()
     db.close()
@@ -50,8 +50,13 @@ def post_db(query, args=(), one=False):
     db.cursor()
     db.execute(query, args)
     db.commit()
-    db.close()
     return db
+
+
+@app.template_filter()
+def datetimeformat(value):
+    datetime_object = datetime.strptime(value, '%Y-%m-%d').strftime('%m/%d/%Y')
+    return datetime_object
 
 
 @app.route('/')
@@ -61,32 +66,33 @@ def login():
 
 @app.route('/dashboard')
 def dashboard():
-    # connectdb = sqlite3.connect(DATABASE)
-    # crsr = connectdb.cursor()
-    # all_users = 'SELECT * from student'
-    # crsr.execute(all_users)
-    # rows = crsr.fetchall()
-    # connectdb.close()
-    # print(rows, 'this is rows')
-    return render_template('dashboard.html')
+    all_students = (all_query_db('SELECT * from student'))
+    return render_template('dashboard.html', all_students=all_students)
 
 
-# def load_quiz():
-#     connectdb = sqlite3.connect(DATABASE)
-#     crsr = connectdb.cursor()
-#     all_users = 'SELECT * from quiz'
-#     crsr.execute(all_users)
-#     rows = crsr.fetchall()
-#     connectdb.close()
-#     print(rows, 'this is rows')
+@app.route('/student_profile', methods=['GET', 'POST'])
+def student_profile():
+    content = {}
+    print(request.args["student_id"], 'line 76')
+    print(request.args["student_first"], 'line 77')
+    print(request.args["student_last"], 'line 78')
+    # print(request.args["student_first"], 'line 76')
+    content['student_id'] = request.args['student_id']
+    content['student_first'] = request.args['student_first'].upper()
+    content['student_last'] = request.args['student_last'].upper()
+    # liststudent = student.split()
+    # print(liststudent[0], 'line 79')
+    # print(liststudent[1], 'line 79')
+    # print(liststudent[2], 'line 79')
+    return render_template('student_profile.html', student=content)
 
 
 @app.route('/student', methods=['GET', 'POST'])
 def student():
     content = {}
     if request.method == "POST":
-        user_input_first = request.form['first_name']
-        user_input_last = request.form['last_name']
+        user_input_first = request.form['first_name'].upper()
+        user_input_last = request.form['last_name'].upper()
         if user_input_first and user_input_last:
             student_name = (post_db(
                     'INSERT INTO student(first_name, last_name) VALUES(?, ?)',
@@ -124,15 +130,14 @@ def user_auth():
 
         try:
             user = (
-              select_query_db("""
+              selective_query_db("""
                               select username from admin where username = ?""",
-                              [user_input], one=True))
+                                 [user_input], one=True))
             if user:
-                password = (select_query_db(
+                password = (selective_query_db(
                             'select password from admin where password = ?',
                             [password_input], one=True))
                 if password:
-                    print(password, 'THIS IS PASSWORD!!')
                     return redirect('/dashboard')
                 return redirect('/')
         except:

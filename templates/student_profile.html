@@ -1,0 +1,10 @@
+{% extends "layout.html" %}
+{% block layout %}
+{{ super() }}
+{% include "navbar_layout.html" %}
+{% block nav %}
+{% endblock nav %}
+<div class="container">
+  <h2>Student: {{student['student_first']}} {{student['student_last']}}</h2>
+</div>
+{% endblock layout%}

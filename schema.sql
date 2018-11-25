@@ -20,6 +20,7 @@ CREATE TABLE quiz (
 CREATE TABLE student_quiz_results (
   student_id INTEGER,
   quiz_id INTEGER,
+  grade INTEGER,
   FOREIGN KEY (student_id) REFERENCES student(student_id),
   FOREIGN KEY (quiz_id) REFERENCES quiz(quiz_id)
 );

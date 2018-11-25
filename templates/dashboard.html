@@ -4,5 +4,22 @@
 {% include "navbar_layout.html" %}
 {% block nav %}
 {% endblock nav %}
-  <button type="button" class="btn btn-primary" onclick="window.location.href='{{ url_for( 'student' ) }}'"">Add Student</button>
+<div class="container">
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th><h2>Select A Student From Roster</h2></th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for student in all_students %}
+    <tr>
+      <td><a href="{{ url_for('student_profile', student_id=student[0], student_first=student[1], student_last=student[2])}}">{{student[1]}} {{student[2]}}</a></td>
+      <td>
+    {% endfor %}
+    </tr>
+  </tbody>
+</table>
+</div>
+
 {% endblock layout%}

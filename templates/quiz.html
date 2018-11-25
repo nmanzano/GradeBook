@@ -20,26 +20,25 @@
       </div>
       <button type="submit" class="btn btn-primary btn-lg btn-block">Save Quiz</button>
   </form>
-
-<table class="table table-striped">
-  <thead>
-    <tr>
-      <th>Quiz Subject</th>
-      <th>Number of Questions</th>
-      <th>Date Administered</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for quiz in all_quizzes %}
-    <tr>
-      <td>{{quiz[1]}}</td>
-      <td>{{quiz[2]}}</td>
-      <td>{{quiz[3]}}</td>
-      <td>{% endfor %}
-    </tr>
-    {% endblock layout%}
-  </tbody>
-</table>
-
-
+  <br>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Quiz Subject</th>
+        <th>Number of Questions</th>
+        <th>Date Administered</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for quiz in all_quizzes %}
+      <tr>
+        <td>{{quiz[1]}}</td>
+        <td>{{quiz[2]}}</td>
+        <td>{{quiz[3]|datetimeformat }}</td>
+        <td>
+      {% endfor %}
+      </tr>
+    </tbody>
+  </table>
 </div>
+{% endblock layout%}
